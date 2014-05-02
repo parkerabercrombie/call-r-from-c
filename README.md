@@ -8,8 +8,10 @@ an array in C, calls a function in R that adds one to each element of
 the array, and then prints the results from C.
 
 To compile and run the example:
-% make
-% ./r_test.sh
+<pre><code>
+  make
+  ./r_test.sh
+</code></pre>
 
 Note that you may need to adjust the path to the R header and library
 files in Makefile and r_test.sh to suit your system.
