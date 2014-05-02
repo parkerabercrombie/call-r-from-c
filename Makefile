@@ -4,9 +4,8 @@
 # Author: Parker Abercrombie <parker@pabercrombie.com>
 #######################################################
 
-R_BASE = /usr/local/IT/R-2.15.3/lib64/R
+R_BASE = /Library/Frameworks/R.framework/Resources
 
-CC = gcc
 CFLAGS = -g -I$(R_BASE)/include
 LFLAGS = -L$(R_BASE)/lib -lR -lRblas
 

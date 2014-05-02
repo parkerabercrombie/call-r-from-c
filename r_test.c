@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include <Rinternals.h>
+#include <Rembedded.h>
 
 /**
  * Invokes the command source("foo.R").
@@ -27,29 +28,25 @@ void source(const char *name)
  */
 void R_add1(int alen, int a[])
 {
-    SEXP e;
-    SEXP arg;
-    SEXP ret;
-
-    int i;
-    int errorOccurred;
-
     // Allocate an R vector and copy the C array into it.
+    SEXP arg;
     PROTECT(arg = allocVector(INTSXP, alen));
     memcpy(INTEGER(arg), a, alen * sizeof(int));
 
     // Setup a call to the R function
-    PROTECT(e = lang2(install("add1"), arg));
+    SEXP add1_call;
+    PROTECT(add1_call = lang2(install("add1"), arg));
 
     // Execute the function
-    ret = R_tryEval(e, R_GlobalEnv, &errorOccurred);
+    int errorOccurred;
+    SEXP ret = R_tryEval(add1_call, R_GlobalEnv, &errorOccurred);
 
     if (!errorOccurred)
     {
         printf("R returned: ");
         double *val = REAL(ret);
-        for (i = 0; i < LENGTH(ret); i++)
-            printf("%f, ", val[i]);
+        for (int i = 0; i < LENGTH(ret); i++)
+            printf("%0.1f, ", val[i]);
         printf("\n");
     }
     else
@@ -64,7 +61,7 @@ int main(int argc, char *argv[])
 {
     // Intialize the R environment.
     int r_argc = 2;
-    const char *r_argv[] = { "R", "--silent" };
+    char *r_argv[] = { "R", "--silent" };
     Rf_initEmbeddedR(r_argc, r_argv);
     
     int arg[] = { 1, 2, 3, 4, 5 };
